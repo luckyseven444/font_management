@@ -3,7 +3,7 @@ import FontsContext from '../contexts/fontsContexts';
 
 function FontList() {
   const [fonts] = useContext(FontsContext);
-  console.log('fonts in Fontlist', fonts)
+
   return (
     <div>
       <h2>Uploaded Fonts</h2>
