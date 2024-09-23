@@ -3,7 +3,7 @@ import FontsContext from '../contexts/fontsContexts';
 
 function FontList() {
   const [fonts] = useContext(FontsContext);
-
+  
   return (
     <div>
       <h2>Uploaded Fonts</h2>
@@ -20,7 +20,7 @@ function FontList() {
             <tr key={index}>
                 <td>{font.font_name}</td>
                 <td> <div style={{ fontFamily: font.font_name }}><span>Example Style</span></div></td>
-                <td><button type="button" class="btn btn-link">Link</button></td>
+                <td><button type="button" className="btn btn-link">Link</button></td>
             </tr>
 
             ))}

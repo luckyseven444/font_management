@@ -3,7 +3,7 @@
 require_once 'Database.php';
 
 class Group {
-    private $db;
+    public $db;
 
     public function __construct(Database $db) {
         $this->db = $db;
@@ -11,28 +11,35 @@ class Group {
 
     // Method to create a new group
     public function create() {
-        // Retrieve input from POST request
-        $data = json_decode(file_get_contents('php://input'), true);
+        // Get the raw POST data
+        $input = file_get_contents('php://input');
+        
+        // Decode the JSON data
+        $data = json_decode($input, true);
 
-        if (!isset($data['name']) || !isset($data['fonts']) || !isset($data['count'])) {
-            http_response_code(400);  // Bad request
-            echo json_encode(['error' => 'Invalid input']);
-            return;
-        }
+        // Ensure data is sanitized and present
+        $name = $data['name'] ?? '';
+        $fonts = $data['fonts'] ?? '';  // Expecting comma-separated fonts
+        $count = $data['count'] ?? 0;  // Ensure count is an integer
 
-        $name = $this->db->real_escape_string($data['name']);
-        $fonts = $this->db->real_escape_string(implode(',', $data['fonts']));
-        $count = (int) $data['count'];
+        // Prepare an SQL statement using PDO
+        $sql = "INSERT INTO `groups` (name, fonts, count) VALUES (:name, :fonts, :count)";
+        $stmt = $this->db->pdo->prepare($sql);
 
-        // Insert into the groups table
-        $query = "INSERT INTO groups (name, fonts, count) VALUES ('$name', '$fonts', $count)";
+        // Bind parameters to the SQL query
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':fonts', $fonts);
+        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
 
-        if ($this->db->query($query)) {
-            http_response_code(201);  // Created
-            echo json_encode(['message' => 'Group created successfully']);
+        // Execute the statement
+        if ($stmt->execute()) {
+            // Return success message
+            //echo json_encode(['status' => 'success', 'message' => 'Group created successfully.']);
+             return ['status' => 'ok', 'message' => 'Font group created successfully'];
         } else {
-            http_response_code(500);  // Internal server error
-            echo json_encode(['error' => 'Failed to create group']);
+            // Return error message
+            //echo json_encode(['status' => 'error', 'message' => 'Failed to create group.']);
+            return ['status' => 'error', 'message' => 'Font group create error '];
         }
     }
 

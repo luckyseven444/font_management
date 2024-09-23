@@ -67,11 +67,11 @@ if ($method === 'POST') {
             header("HTTP/1.0 400 Bad Request");
             echo json_encode(['status' => 'error', 'message' => 'Font name is missing.']);
         }
-    } elseif ($pathSegments[0] === 'group' && $pathSegments[1] === 'create') {
+    } elseif ($pathSegments[1] === 'group' && $pathSegments[2] === 'create') {
         // Handle group creation
         $group = new Group($db);
         $group->create();
-    } elseif ($pathSegments[0] === 'group' && $pathSegments[1] === 'update' && isset($pathSegments[2])) {
+    } elseif ($pathSegments[1] === 'group' && $pathSegments[2] === 'update' && isset($pathSegments[3])) {
         // Handle group update
         $id = (int)$pathSegments[2];
         $group = new Group($db);

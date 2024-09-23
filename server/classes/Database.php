@@ -1,6 +1,6 @@
 <?php
 class Database {
-    private $pdo;
+    public $pdo;
 
     public function __construct() {
         $this->connectDB();

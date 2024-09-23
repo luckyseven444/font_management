@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import FontsContext from '../contexts/fontsContexts'; // Assuming fonts are provided via context
+import FontGroupContext from '../contexts/fontGroupContext';
 
 function Create() {
   const [fonts] = useContext(FontsContext);  
   const [groupName, setGroupName] = useState('');
   const [rows, setRows] = useState([{ text: '', font: '', size: '', priceChange: '' }]);
-
+  const [group, setGroup] = useContext(FontGroupContext)
   // Add a new row
   const addRow = () => {
     setRows([...rows, { text: '', font: '', size: '', priceChange: '' }]);
@@ -48,7 +49,7 @@ function Create() {
 
     try {
       // Submit the data to the server
-      const response = await fetch('http://localhost:8080/server/group/create', {
+      const response = await fetch('http://localhost:8080/server/group/create/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(groupData),
@@ -59,6 +60,7 @@ function Create() {
         // Reset form
         setGroupName('');
         setRows([{ text: '', font: '', size: '', priceChange: '' }]);
+        setGroup([...group, { group_name: groupName, font_names: fontsList, count: filledRows.length }]);
       } else {
         alert('Failed to create group.');
       }
